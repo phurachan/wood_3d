@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wood 3D Projects - หน้าหลัก</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Sarabun', 'Noto Sans Thai', Arial, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .project-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: #4CAF50;
+        }
+        
+        .project-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 1.3em;
+        }
+        
+        .project-card p {
+            margin: 0 0 15px 0;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .project-card a {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .project-card a:hover {
+            background: #45a049;
+        }
+        
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .panel-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .panel-card h4 {
+            margin: 0 0 8px 0;
+            font-size: 1.1em;
+        }
+        
+        .panel-card a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: #333;
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🪵 Wood 3D Projects</h1>
+            <p>โปรเจกต์งานไม้ 3D ด้วย Three.js</p>
+        </div>
+        
+        <div class="content">
+            <!-- Main Projects Section -->
+            <div class="section">
+                <h2>🎯 โปรเจกต์หลัก</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>🧸 กล่องใส่ของเล่น (Toy Box)</h3>
+                        <p>กล่องของเล่นแบบ Tab & Slot System ขนาด 40x20x30cm พร้อมระบบ Exploded View สำหรับดูการประกอบ</p>
+                        <a href="toybox_project/toybox.html">เปิดดู 3D Model</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Individual Panels Section -->
+            <div class="section">
+                <h2>🔧 แผ่นไม้แต่ละชิ้น</h2>
+                <div class="panel-grid">
+                    <div class="panel-card">
+                        <h4>แผ่นด้านบน</h4>
+                        <a href="toybox_project/panel_top.html">ดูแผ่นบน</a>
+                    </div>
+                    <div class="panel-card">
+                        <h4>แผ่นด้านล่าง</h4>
+                        <a href="toybox_project/panel_bottom.html">ดูแผ่นล่าง</a>
+                    </div>
+                    <div class="panel-card">
+                        <h4>แผ่นด้านซ้าย</h4>
+                        <a href="toybox_project/panel_left.html">ดูแผ่นซ้าย</a>
+                    </div>
+                    <div class="panel-card">
+                        <h4>แผ่นด้านขวา</h4>
+                        <a href="toybox_project/panel_right.html">ดูแผ่นขวา</a>
+                    </div>
+                    <div class="panel-card">
+                        <h4>แผ่นด้านหลัง</h4>
+                        <a href="toybox_project/panel_back.html">ดูแผ่นหลัง</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Development Tools Section -->
+            <div class="section">
+                <h2>🛠️ เครื่องมือพัฒนา</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>🧪 Test Panel</h3>
+                        <p>หน้าทดสอบสำหรับพัฒนาและทดลองแผ่นไม้ก่อนนำไปใช้งาน</p>
+                        <a href="toybox_project/test_panel.html">เปิด Test Panel</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Projects Section -->
+            <div class="section">
+                <h2>📂 โปรเจกต์อื่นๆ</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>🏠 บ้านแมว Jigsaw</h3>
+                        <p>โปรเจกต์บ้านแมวแบบจิ๊กซอว์ สำหรับการตัดด้วย CNC</p>
+                        <a href="jigsaw_cathouse.html">ดูโปรเจกต์</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>📐 แปลนเทคนิค</h3>
+                        <p>แปลนและข้อมูลเทคนิคสำหรับการผลิต</p>
+                        <a href="technical_plans.html">ดูแปลน</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>✂️ แผนการตัด</h3>
+                        <p>แผนการจัดวางและตัดไม้อย่างมีประสิทธิภาพ</p>
+                        <a href="cutting_plan.html">ดูแผนตัด</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>💡 สร้างด้วย Three.js และความรัก | Wood 3D Projects</p>
+        </div>
+    </div>
+</body>
+</html>
