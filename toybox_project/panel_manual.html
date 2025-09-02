@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือแปลนแผ่นไม้ 2D - กล่องใส่ของเล่น</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+            .page-break { page-break-before: always; }
+            .panel-section { page-break-inside: avoid; margin-bottom: 30px; }
+            .panel-content { 
+                display: block !important; 
+                grid-template-columns: none !important; 
+            }
+            .panel-diagram { margin-bottom: 20px; }
+            .page-break-after-details { page-break-before: always; }
+            .page-break-after-details + .holes-list { page-break-before: avoid; }
+        }
+        
+        body {
+            font-family: 'Sarabun', 'Noto Sans Thai', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: white;
+            color: #333;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #8B4513 0%, #DEB887 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .controls button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .controls button:hover {
+            background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        
+        .panel-section {
+            background: white;
+            border: 2px solid #DEB887;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #DEB887;
+        }
+        
+        .panel-number {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .panel-title {
+            flex: 1;
+        }
+        
+        .panel-title h2 {
+            margin: 0;
+            color: #8B4513;
+            font-size: 1.8em;
+        }
+        
+        .panel-title p {
+            margin: 5px 0 0 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .panel-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .panel-diagram {
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .panel-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #8B4513;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #8B4513;
+            min-width: 120px;
+        }
+        
+        .detail-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        .holes-list {
+            margin-top: 15px;
+        }
+        
+        .hole-item {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .joinery-info {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .joinery-info h4 {
+            color: #2E7D32;
+            margin: 0 0 10px 0;
+        }
+        
+        #backToIndex {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #8B4513;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 2px solid transparent;
+        }
+
+        #backToIndex:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            border-color: #DEB887;
+        }
+        
+        .svg-container {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" id="backToIndex" class="no-print">🏠 กลับหน้าหลัก</a>
+    
+    <div class="header">
+        <h1>📋 คู่มือแปลนแผ่นไม้ 2D</h1>
+        <p>กล่องใส่ของเล่น - ระบบหัวต่อ-ช่องต่อ</p>
+    </div>
+    
+    <div class="controls no-print">
+        <button onclick="window.print()">🖨️ พิมพ์ PDF</button>
+        <button onclick="generateAllPanels()">🔄 โหลดแปลนใหม่</button>
+    </div>
+    
+    <!-- แผ่นที่ 1: แผ่นบน -->
+    <div class="panel-section">
+        <div class="panel-header">
+            <div class="panel-number">1</div>
+            <div class="panel-title">
+                <h2>แผ่นด้านบน (Top Panel)</h2>
+                <p>แผ่นหลังคาของกล่อง พร้อมระบบหัวต่อ</p>
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-diagram">
+                <h3>แปลน 2D</h3>
+                <div class="svg-container" id="panel-top-diagram">
+                    <!-- แปลน 2D จะแสดงที่นี่ -->
+                </div>
+            </div>
+            <div class="panel-details">
+                <div class="detail-item">
+                    <div class="detail-label">ขนาด:</div>
+                    <div class="detail-value">40×20×1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">วัสดุ:</div>
+                    <div class="detail-value">ไม้อัด หรือ MDF หนา 1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">มุมโค้ง:</div>
+                    <div class="detail-value">รัศมี 1 ซม. ทุกมุม</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">หัวต่อ:</div>
+                    <div class="detail-value">5 หัวต่อ ด้านซ้าย 2 จุด / ด้านขวา 2 จุด / ด้านล่าง 1 จุด รายละเอียดอยู่ในส่วน "หัวต่อ (5 หัวต่อ)"</div>
+                </div>
+                
+                <div class="holes-list page-break-after-details">
+                    <h4>หัวต่อ (5 หัวต่อ)</h4>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 1:</strong> ด้านซ้าย ขนาด 1×4 ซม. ห่างจากขอบบน 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 2:</strong> ด้านซ้าย ขนาด 1×4 ซม. ห่างจากขอบล่าง 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 3:</strong> ด้านขวา ขนาด 1×4 ซม. ห่างจากขอบบน 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 4:</strong> ด้านขวา ขนาด 1×4 ซม. ห่างจากขอบล่าง 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 5:</strong> ด้านล่าง ขนาด 20×1 ซม. ห่างจากขอบซ้าย 10 ซม.
+                    </div>
+                </div>
+                
+                <div class="joinery-info">
+                    <h4>🔧 วิธีการต่อ</h4>
+                    <p>หัวต่อด้านซ้าย จะใส่เข้ากับรูเจาะแผ่นด้านขวา<br>
+                        หัวต่อด้านขวา จะใส่เข้ากับรูเจาะแผ่นด้านซ้าย<br>
+                        หัวต่อด้านล่าง จะใส่เข้ากับรูเจาะแผ่นหลัง</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- แผ่นที่ 2: แผ่นล่าง -->
+    <div class="panel-section">
+        <div class="panel-header">
+            <div class="panel-number">2</div>
+            <div class="panel-title">
+                <h2>แผ่นด้านล่าง (Bottom Panel)</h2>
+                <p>แผ่นพื้นของกล่อง เหมือนแผ่นบนทุกประการ</p>
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-diagram">
+                <h3>แปลน 2D</h3>
+                <div class="svg-container" id="panel-bottom-diagram">
+                    <!-- แปลน 2D จะแสดงที่นี่ -->
+                </div>
+            </div>
+            <div class="panel-details">
+                <div class="detail-item">
+                    <div class="detail-label">ขนาด:</div>
+                    <div class="detail-value">40×20×1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">วัสดุ:</div>
+                    <div class="detail-value">ไม้อัด หรือ MDF หนา 1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">มุมโค้ง:</div>
+                    <div class="detail-value">รัศมี 1 ซม. ทุกมุม</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">หัวต่อ:</div>
+                    <div class="detail-value">5 หัวต่อ ด้านซ้าย 2 จุด / ด้านขวา 2 จุด / ด้านบน 1 จุด รายละเอียดอยู่ในส่วน "หัวต่อ (5 หัวต่อ)"</div>
+                </div>
+                
+                <div class="holes-list page-break-after-details">
+                    <h4>หัวต่อ (5 หัวต่อ)</h4>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 1:</strong> ด้านซ้าย ขนาด 1×4 ซม. ห่างจากขอบบน 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 2:</strong> ด้านซ้าย ขนาด 1×4 ซม. ห่างจากขอบล่าง 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 3:</strong> ด้านขวา ขนาด 1×4 ซม. ห่างจากขอบบน 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 4:</strong> ด้านขวา ขนาด 1×4 ซม. ห่างจากขอบล่าง 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>หัวต่อ 5:</strong> ด้านบน ขนาด 20×1 ซม. ห่างจากขอบซ้าย 10 ซม.
+                    </div>
+                </div>
+                
+                <div class="joinery-info">
+                    <h4>🔧 วิธีการต่อ</h4>
+                    <p>หัวต่อด้านซ้าย จะใส่เข้ากับรูเจาะแผ่นด้านขวา<br>
+                        หัวต่อด้านขวา จะใส่เข้ากับรูเจาะแผ่นด้านซ้าย<br>
+                        หัวต่อด้านบน จะใส่เข้ากับรูเจาะแผ่นหลัง</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- แผ่นที่ 3: แผ่นซ้าย -->  
+    <div class="panel-section">
+        <div class="panel-header">
+            <div class="panel-number">3</div>
+            <div class="panel-title">
+                <h2>แผ่นด้านซ้าย (Left Panel)</h2>
+                <p>แผ่นข้างซ้าย พร้อมช่องต่อและรูเจาะ</p>
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-diagram">
+                <h3>แปลน 2D</h3>
+                <div class="svg-container" id="panel-left-diagram">
+                    <!-- แปลน 2D จะแสดงที่นี่ -->
+                </div>
+            </div>
+            <div class="panel-details">
+                <div class="detail-item">
+                    <div class="detail-label">ขนาด:</div>
+                    <div class="detail-value">40×20×1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">วัสดุ:</div>
+                    <div class="detail-value">ไม้อัด หรือ MDF หนา 1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">มุมโค้ง:</div>
+                    <div class="detail-value">รัศมี 1 ซม. ทุกมุม</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">รอยบาก:</div>
+                    <div class="detail-value">ด้านซ้าย 2 จุด รายละเอียดอยู่ในส่วน "รอยบาก (2 รอย)"</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">รูเจาะ:</div>
+                    <div class="detail-value">ด้านขวา 2 จุด รายละเอียดอยู่ในส่วน "รูเจาะ (2 รู)"</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">หัวต่อ:</div>
+                    <div class="detail-value">ด้านล่าง 1 จุด ขนาด 20×1 ซม.</div>
+                </div>
+                
+                <div class="holes-list page-break-after-details">
+                    <h4>🔪 รอยบาก (2 รอย)</h4>
+                    <div class="hole-item">
+                        <strong>รอยบาก 1:</strong> ด้านซ้าย ขนาด 1×4 ซม. เจาะเข้าไป 1 ซม. ห่างจากขอบบน 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>รอยบาก 2:</strong> ด้านซ้าย ขนาด 1×4 ซม. เจาะเข้าไป 1 ซม. ห่างจากขอบล่าง 4 ซม.
+                    </div>
+                </div>
+                
+                <div class="holes-list">
+                    <h4>🕳️ รูเจาะ (2 รู)</h4>
+                    <div class="hole-item">
+                        <strong>รู 1:</strong> ขนาด 1×4 ซม. ห่างจากขอบบน 4 ซม. ห่างจากขอบขวา 1 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>รู 2:</strong> ขนาด 1×4 ซม. ห่างจากขอบล่าง 4 ซม. ห่างจากขอบขวา 1 ซม.
+                    </div>
+                </div>
+                
+                <div class="joinery-info">
+                    <h4>🔧 วิธีการต่อ</h4>
+                    <p>รอยบาก (2 รอย) จะรับหัวต่อจากแผ่นบน<br>
+                        รูเจาะ (2 รู) จะรับหัวต่อจากแผ่นล่าง<br>
+                        หัวต่อ จะใส่เข้ากับรูเจาะแผ่นหลัง
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- แผ่นที่ 4: แผ่นขวา -->
+    <div class="panel-section">
+        <div class="panel-header">
+            <div class="panel-number">4</div>
+            <div class="panel-title">
+                <h2>แผ่นด้านขวา (Right Panel)</h2>
+                <p>แผ่นข้างขวา เหมือนแผ่นซ้ายทุกประการ</p>
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-diagram">
+                <h3>แปลน 2D</h3>
+                <div class="svg-container" id="panel-right-diagram">
+                    <!-- แปลน 2D จะแสดงที่นี่ -->
+                </div>
+            </div>
+            <div class="panel-details">
+                <div class="detail-item">
+                    <div class="detail-label">ขนาด:</div>
+                    <div class="detail-value">40×20×1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">วัสดุ:</div>
+                    <div class="detail-value">ไม้อัด หรือ MDF หนา 1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">มุมโค้ง:</div>
+                    <div class="detail-value">รัศมี 1 ซม. ทุกมุม</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">รอยบาก:</div>
+                    <div class="detail-value">ด้านขวา 2 จุด รายละเอียดอยู่ในส่วน "รอยบาก (2 รอย)"</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">รูเจาะ:</div>
+                    <div class="detail-value">ด้านซ้าย 2 จุด รายละเอียดอยู่ในส่วน "รูเจาะ (2 รู)"</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">หัวต่อ:</div>
+                    <div class="detail-value">ด้านล่าง 1 จุด ขนาด 20×1 ซม.</div>
+                </div>
+                
+                <div class="holes-list page-break-after-details">
+                    <h4>🔪 รอยบาก (2 รอย)</h4>
+                    <div class="hole-item">
+                        <strong>รอยบาก 1:</strong> ด้านขวา ขนาด 1×4 ซม. เจาะเข้าไป 1 ซม. ห่างจากขอบบน 4 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>รอยบาก 2:</strong> ด้านขวา ขนาด 1×4 ซม. เจาะเข้าไป 1 ซม. ห่างจากขอบล่าง 4 ซม.
+                    </div>
+                </div>
+                
+                <div class="holes-list">
+                    <h4>🕳️ รูเจาะ (2 รู)</h4>
+                    <div class="hole-item">
+                        <strong>รู 1:</strong> ขนาด 1×4 ซม. ห่างจากขอบบน 4 ซม. ห่างจากขอบซ้าย 1 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>รู 2:</strong> ขนาด 1×4 ซม. ห่างจากขอบล่าง 4 ซม. ห่างจากขอบซ้าย 1 ซม.
+                    </div>
+                </div>
+                
+                <div class="joinery-info">
+                    <h4>🔧 วิธีการต่อ</h4>
+                    <p>รอยบาก (2 รอย) จะรับหัวต่อจากแผ่นบน<br>
+                        รูเจาะ (2 รู) จะรับหัวต่อจากแผ่นล่าง<br>
+                        หัวต่อ จะใส่เข้ากับรูเจาะแผ่นหลัง
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- แผ่นที่ 5: แผ่นหลัง -->
+    <div class="panel-section">
+        <div class="panel-header">
+            <div class="panel-number">5</div>
+            <div class="panel-title">
+                <h2>แผ่นด้านหลัง (Back Panel)</h2>
+                <p>แผ่นหลังขนาดใหญ่ พร้อมช่องต่อรอบด้าน</p>
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-diagram">
+                <h3>แปลน 2D</h3>
+                <div class="svg-container" id="panel-back-diagram">
+                    <!-- แปลน 2D จะแสดงที่นี่ -->
+                </div>
+            </div>
+            <div class="panel-details">
+                <div class="detail-item">
+                    <div class="detail-label">ขนาด:</div>
+                    <div class="detail-value">42×41×1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">วัสดุ:</div>
+                    <div class="detail-value">ไม้อัด หรือ MDF หนา 1 ซม.</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">มุมโค้ง:</div>
+                    <div class="detail-value">รัศมี 1 ซม. ทุกมุม</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">รูเจาะ:</div>
+                    <div class="detail-value">รอบด้าน 4 จุด รายละเอียดอยู่ในส่วน "รูเจาะ (4 รู)"</div>
+                </div>
+                
+                <div class="holes-list page-break-after-details">
+                    <h4>🕳️ รูเจาะ (4 รู)</h4>
+                    <div class="hole-item">
+                        <strong>รู 1:</strong> ด้านซ้าย ขนาด 1×20 ซม. ห่างจากขอบบน 11 ซม. ห่างจากขอบซ้าย 1 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>รู 2:</strong> ด้านขวา ขนาด 1×20 ซม. ห่างจากขอบบน 11 ซม. ห่างจากขอบขวา 1 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>รู 3:</strong> ด้านล่าง ขนาด 20×1 ซม. ห่างจากขอบซ้าย 11 ซม. ห่างจากขอบล่าง 1 ซม.
+                    </div>
+                    <div class="hole-item">
+                        <strong>รู 4:</strong> ด้านบน ขนาด 20×1 ซม. ห่างจากขอบซ้าย 11 ซม. ห่างจากขอบบน 1 ซม.
+                    </div>
+                </div>
+                
+                <div class="joinery-info">
+                    <h4>🔧 วิธีการต่อ</h4>
+                    <p>รูเจาะด้านซ้าย จะรับหัวต่อจากแผ่นซ้าย<br>
+                        รูเจาะด้านขวา จะรับหัวต่อจากแผ่นขวา<br>
+                        รูเจาะด้านล่าง จะรับหัวต่อจากแผ่นล่าง<br>
+                        รูเจาะด้านบน จะรับหัวต่อจากแผ่นบน<br>
+                        เป็นแผ่นหลักที่รองรับโครงสร้างทั้งหมด</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // คัดลอก functions จาก panel_2d_converter.html
+        function shapeToSVGPath(shape, scale = 100) {
+            const points = shape.getPoints();
+            if (!points || points.length === 0) return { mainPath: '', holes: [] };
+            
+            let mainPath = `M ${points[0].x * scale} ${points[0].y * scale}`;
+            
+            for (let i = 1; i < points.length; i++) {
+                mainPath += ` L ${points[i].x * scale} ${points[i].y * scale}`;
+            }
+            
+            mainPath += ' Z';
+            
+            const holePaths = [];
+            if (shape.holes && shape.holes.length > 0) {
+                shape.holes.forEach(hole => {
+                    const holePoints = hole.getPoints();
+                    if (holePoints && holePoints.length > 0) {
+                        let holePath = `M ${holePoints[0].x * scale} ${holePoints[0].y * scale}`;
+                        
+                        for (let i = 1; i < holePoints.length; i++) {
+                            holePath += ` L ${holePoints[i].x * scale} ${holePoints[i].y * scale}`;
+                        }
+                        
+                        holePath += ' Z';
+                        holePaths.push(holePath);
+                    }
+                });
+            }
+            
+            return { mainPath, holes: holePaths };
+        }
+
+        // Shape creation functions (คัดลอกจาก panel_2d_converter.html)
+        function createTopPanelShape() {
+            const panelShape1 = new THREE.Shape();
+            const cornerRadius = 0.1;
+            
+            panelShape1.moveTo(-1.9 + cornerRadius, -1);
+            panelShape1.lineTo(1.9 - cornerRadius, -1);
+            panelShape1.quadraticCurveTo(1.9, -1, 1.9, -1 + cornerRadius);
+            panelShape1.lineTo(1.9, -0.6);
+            panelShape1.lineTo(2, -0.6);
+            panelShape1.lineTo(2, -0.2);
+            panelShape1.lineTo(1.9, -0.2);
+            panelShape1.lineTo(1.9, 0.2);
+            panelShape1.lineTo(2, 0.2);
+            panelShape1.lineTo(2, 0.6);
+            panelShape1.lineTo(1.9, 0.6);
+            panelShape1.lineTo(1.9, 0.9);
+            panelShape1.lineTo(1, 0.9);
+            panelShape1.lineTo(1, 1 - cornerRadius);
+            panelShape1.quadraticCurveTo(1, 1, 1 - cornerRadius, 1);
+            panelShape1.lineTo(-1 + cornerRadius, 1);
+            panelShape1.quadraticCurveTo(-1, 1, -1, 1 - cornerRadius);
+            panelShape1.lineTo(-1, 0.9);
+            panelShape1.lineTo(-1.9, 0.9);
+            panelShape1.lineTo(-1.9, 0.6);
+            panelShape1.lineTo(-2, 0.6);
+            panelShape1.lineTo(-2, 0.2);
+            panelShape1.lineTo(-1.9, 0.2);
+            panelShape1.lineTo(-1.9, -0.2);
+            panelShape1.lineTo(-2, -0.2);
+            panelShape1.lineTo(-2, -0.6);
+            panelShape1.lineTo(-1.9, -0.6);
+            panelShape1.lineTo(-1.9, -1 + cornerRadius);
+            panelShape1.quadraticCurveTo(-1.9, -1, -1.9 + cornerRadius, -1);
+            
+            return panelShape1;
+        }
+
+        function createBottomPanelShape() {
+            return createTopPanelShape();
+        }
+
+        function createLeftPanelShape() {
+            const panelShape3 = new THREE.Shape();
+            const cornerRadius = 0.1;
+            
+            panelShape3.moveTo(-2 + cornerRadius, -1);
+            panelShape3.lineTo(2 - cornerRadius, -1);
+            panelShape3.quadraticCurveTo(2, -1, 2, -1 + cornerRadius);
+            panelShape3.lineTo(2, 0.9);
+            panelShape3.lineTo(1, 0.9);
+            panelShape3.lineTo(1, 1 - cornerRadius);
+            panelShape3.quadraticCurveTo(1, 1, 1 - cornerRadius, 1);
+            panelShape3.lineTo(-1 + cornerRadius, 1);
+            panelShape3.quadraticCurveTo(-1, 1, -1, 1 - cornerRadius);
+            panelShape3.lineTo(-1, 0.9);
+            panelShape3.lineTo(-2, 0.9);
+            panelShape3.lineTo(-2, 0.6);
+            panelShape3.lineTo(-1.9, 0.6);
+            panelShape3.lineTo(-1.9, 0.2);
+            panelShape3.lineTo(-2, 0.2);
+            panelShape3.lineTo(-2, -0.2);
+            panelShape3.lineTo(-1.9, -0.2);
+            panelShape3.lineTo(-1.9, -0.6);
+            panelShape3.lineTo(-2, -0.6);
+            panelShape3.lineTo(-2, -1 + cornerRadius);
+            panelShape3.quadraticCurveTo(-2, -1, -2 + cornerRadius, -1);
+            
+            const rightHole1 = new THREE.Shape();
+            rightHole1.moveTo(1.8, 0.2);
+            rightHole1.lineTo(1.9, 0.2);
+            rightHole1.lineTo(1.9, 0.6);
+            rightHole1.lineTo(1.8, 0.6);
+            rightHole1.lineTo(1.8, 0.2);
+            
+            const rightHole2 = new THREE.Shape();
+            rightHole2.moveTo(1.8, -0.6);
+            rightHole2.lineTo(1.9, -0.6);
+            rightHole2.lineTo(1.9, -0.2);
+            rightHole2.lineTo(1.8, -0.2);
+            rightHole2.lineTo(1.8, -0.6);
+            
+            panelShape3.holes.push(rightHole1);
+            panelShape3.holes.push(rightHole2);
+            
+            return panelShape3;
+        }
+
+        function createRightPanelShape() {
+            return createLeftPanelShape();
+        }
+
+        function createBackPanelShape() {
+            const panelShape5 = new THREE.Shape();
+            const cornerRadius = 0.1;
+            
+            panelShape5.moveTo(-2.1 + cornerRadius, -2.05);
+            panelShape5.lineTo(2.1 - cornerRadius, -2.05);
+            panelShape5.quadraticCurveTo(2.1, -2.05, 2.1, -2.05 + cornerRadius);
+            panelShape5.lineTo(2.1, 2.05 - cornerRadius);
+            panelShape5.quadraticCurveTo(2.1, 2.05, 2.1 - cornerRadius, 2.05);
+            panelShape5.lineTo(-2.1 + cornerRadius, 2.05);
+            panelShape5.quadraticCurveTo(-2.1, 2.05, -2.1, 2.05 - cornerRadius);
+            panelShape5.lineTo(-2.1, -2.05 + cornerRadius);
+            panelShape5.quadraticCurveTo(-2.1, -2.05, -2.1 + cornerRadius, -2.05);
+            
+            const leftHole = new THREE.Shape();
+            leftHole.moveTo(-2.0, 0.95);
+            leftHole.lineTo(-1.9, 0.95);
+            leftHole.lineTo(-1.9, -1.05);
+            leftHole.lineTo(-2.0, -1.05);
+            leftHole.lineTo(-2.0, 0.95);
+            
+            const rightHole = new THREE.Shape();
+            rightHole.moveTo(1.9, 0.95);
+            rightHole.lineTo(2.0, 0.95);
+            rightHole.lineTo(2.0, -1.05);
+            rightHole.lineTo(1.9, -1.05);
+            rightHole.lineTo(1.9, 0.95);
+            
+            const bottomHole = new THREE.Shape();
+            bottomHole.moveTo(-1.0, -1.95);
+            bottomHole.lineTo(1.0, -1.95);
+            bottomHole.lineTo(1.0, -1.85);
+            bottomHole.lineTo(-1.0, -1.85);
+            bottomHole.lineTo(-1.0, -1.95);
+            
+            const topHole = new THREE.Shape();
+            topHole.moveTo(-1.0, 1.85);
+            topHole.lineTo(1.0, 1.85);
+            topHole.lineTo(1.0, 1.95);
+            topHole.lineTo(-1.0, 1.95);
+            topHole.lineTo(-1.0, 1.85);
+            
+            panelShape5.holes.push(leftHole);
+            panelShape5.holes.push(rightHole);
+            panelShape5.holes.push(bottomHole);
+            panelShape5.holes.push(topHole);
+            
+            return panelShape5;
+        }
+
+        function generatePanelDiagram(shapeFunction, containerId) {
+            const shape = shapeFunction();
+            const pathData = shapeToSVGPath(shape);
+            
+            const points = shape.getPoints();
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            
+            points.forEach(point => {
+                minX = Math.min(minX, point.x * 100);
+                minY = Math.min(minY, point.y * 100);
+                maxX = Math.max(maxX, point.x * 100);
+                maxY = Math.max(maxY, point.y * 100);
+            });
+            
+            const width = maxX - minX + 40;
+            const height = maxY - minY + 40;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            let holesElements = '';
+            if (pathData.holes && pathData.holes.length > 0) {
+                pathData.holes.forEach((holePath) => {
+                    holesElements += `
+                        <path d="${holePath}" 
+                              fill="white" 
+                              stroke="#666" 
+                              stroke-width="1.5" 
+                              stroke-linejoin="round"/>`;
+                });
+            }
+            
+            const svgContent = `
+                <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="max-width: 100%; height: auto;">
+                    <g transform="translate(${centerX}, ${centerY})">
+                        <path d="${pathData.mainPath}" 
+                              fill="rgba(139, 69, 19, 0.1)" 
+                              stroke="none"/>
+                        <path d="${pathData.mainPath}" 
+                              fill="none" 
+                              stroke="#333" 
+                              stroke-width="2" 
+                              stroke-linejoin="round"/>
+                        ${holesElements}
+                    </g>
+                    <defs>
+                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#eee" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid)" opacity="0.3"/>
+                </svg>
+            `;
+            
+            document.getElementById(containerId).innerHTML = svgContent;
+        }
+
+        function generateAllPanels() {
+            generatePanelDiagram(createTopPanelShape, 'panel-top-diagram');
+            generatePanelDiagram(createBottomPanelShape, 'panel-bottom-diagram');
+            generatePanelDiagram(createLeftPanelShape, 'panel-left-diagram');
+            generatePanelDiagram(createRightPanelShape, 'panel-right-diagram');
+            generatePanelDiagram(createBackPanelShape, 'panel-back-diagram');
+        }
+
+        // Auto generate all panels when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            generateAllPanels();
+        });
+    </script>
+</body>
+</html>

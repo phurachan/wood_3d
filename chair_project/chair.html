@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>กล่องใส่ของเล่น - Tab & Slot System</title>
+    <title>เก้าอี้ไม้ 3D - Chair</title>
     <style>
         body {
             margin: 0;
@@ -40,6 +40,13 @@
             padding-bottom: 8px;
         }
         
+        .description {
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
         button {
             padding: 12px 18px;
             background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
@@ -66,13 +73,6 @@
         
         #exportButton:hover {
             background: linear-gradient(135deg, #45a049 0%, #66bb6a 100%);
-        }
-
-        .description {
-            margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #ccc;
         }
 
         .color-legend {
@@ -121,11 +121,50 @@
 </head>
 <body>
     <a href="../index.html" id="backToIndex">🏠 กลับหน้าหลัก</a>
+    
     <div id="container">
+        <div id="controls">
+            <h3>🪑 เก้าอี้ไม้</h3>
+            <div class="description">
+                เก้าอี้ไม้แบบคลาสสิค<br>
+                ขนาด: 45x45x85cm<br>
+                ไม้สัก หนา 2.5cm<br>
+                ระบบ Mortise & Tenon
+            </div>
+            
+            <button id="explodeButton">แยกชิ้นส่วน</button>
+            <button id="assembleButton">ประกอบ</button>
+            <button id="rotateButton">หมุนดู</button>
+            <button id="exportButton">บันทึกภาพ</button>
+            
+            <div class="color-legend">
+                <strong>🎨 สีแยกชิ้นส่วน:</strong>
+                <div class="legend-item">
+                    <div class="color-box" style="background: #8B4513;"></div>
+                    <span>ที่นั่ง (Seat)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box" style="background: #A0522D;"></div>
+                    <span>พนักพิง (Backrest)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box" style="background: #CD853F;"></div>
+                    <span>ขาหน้า (Front Legs)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box" style="background: #DEB887;"></div>
+                    <span>ขาหลัง (Back Legs)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box" style="background: #F4A460;"></div>
+                    <span>คานเสริม (Braces)</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="toybox_script.js"></script>
+    <script src="chair_script.js"></script>
 </body>
 </html>

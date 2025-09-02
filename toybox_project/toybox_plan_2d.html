@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แปลน 2D - กล่องใส่ของเล่น | ระบบหัวต่อ-ช่องต่อ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Sarabun', 'Noto Sans Thai', Arial, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #8B4513 0%, #DEB887 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+        
+        .section h2 {
+            color: #8B4513;
+            border-bottom: 3px solid #DEB887;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .section h3 {
+            color: #A0522D;
+            margin: 20px 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .spec-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #8B4513;
+        }
+        
+        .spec-card h4 {
+            color: #8B4513;
+            margin-bottom: 10px;
+        }
+        
+        .dimensions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .dim-box {
+            background: #fff;
+            border: 2px solid #DEB887;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .dim-box strong {
+            color: #8B4513;
+            font-size: 1.1em;
+        }
+        
+        .panel-diagram {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .diagram-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .panel-drawing {
+            background: #fff;
+            border: 2px solid #333;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .panel-svg {
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+        
+        .cutting-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .cutting-list th,
+        .cutting-list td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .cutting-list th {
+            background: #8B4513;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .cutting-list tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .color-code {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .assembly-notes {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #4CAF50;
+            margin: 20px 0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #ffc107;
+            margin: 15px 0;
+        }
+        
+        .tools-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .tool-item {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .header {
+                background: #8B4513 !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        #backToIndex {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #8B4513;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 2px solid transparent;
+        }
+
+        #backToIndex:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            border-color: #DEB887;
+        }
+
+        @media print {
+            #backToIndex {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" id="backToIndex">🏠 กลับหน้าหลัก</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🧸 แปลนการสร้างกล่องใส่ของเล่น</h1>
+            <p>ระบบหัวต่อ-ช่องต่อ | ขนาด 40×20×30 ซม.</p>
+        </div>
+        
+        <div class="content">
+            <!-- ข้อมูลทั่วไป -->
+            <div class="section">
+                <h2>📋 ข้อมูลทั่วไป</h2>
+                
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <h4>ขนาดโดยรวม</h4>
+                        <p><strong>กว้าง:</strong> 40 ซม.<br>
+                        <strong>ลึก:</strong> 20 ซม.<br>
+                        <strong>สูง:</strong> 30 ซม.</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4>วัสดุ</h4>
+                        <p><strong>ไม้:</strong> ไม้ MDF หรือไม้สน<br>
+                        <strong>ความหนา:</strong> 1 ซม.<br>
+                        <strong>การตกแต่ง:</strong> ทาสีหรือเคลือบใส</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4>ระบบการต่อ</h4>
+                        <p><strong>ระบบหัวต่อ-ช่องต่อ</strong><br>
+                        ไม่ต้องใช้สกรูหรือกาว<br>
+                        ประกอบ-รื้อได้ง่าย<br>
+                        มุมโค้งรัศมี 1 ซม.</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4>ปริมาตรบรรจุ</h4>
+                        <p><strong>พื้นที่ใช้สอย:</strong> 38×18×28 ซม.<br>
+                        <strong>ปริมาตร:</strong> ประมาณ 19.2 ลิตร<br>
+                        <strong>น้ำหนักรับได้:</strong> 15-20 กก.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- รายการตัดไม้ -->
+            <div class="section">
+                <h2>📐 รายการชิ้นส่วนและขนาดการตัด</h2>
+                
+                <table class="cutting-list">
+                    <thead>
+                        <tr>
+                            <th>ชิ้นส่วน</th>
+                            <th>ขนาด (ซม.)</th>
+                            <th>จำนวน</th>
+                            <th>หมายเหตุ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>หลังคา (Top)</td>
+                            <td>40 × 20 × 1</td>
+                            <td>1</td>
+                            <td>มีหัวต่อรอบด้าน, มุมโค้ง R1 ซม.</td>
+                        </tr>
+                        <tr>
+                            <td>ฐาน (Bottom)</td>
+                            <td>40 × 20 × 1</td>
+                            <td>1</td>
+                            <td>มีหัวต่อรอบด้าน, มุมโค้ง R1 ซม.</td>
+                        </tr>
+                        <tr>
+                            <td>ด้านซ้าย (Left)</td>
+                            <td>20 × 28 × 1</td>
+                            <td>1</td>
+                            <td>มีช่องต่อแบบเจาะรูบน-ล่าง, มุมโค้ง R1 ซม.</td>
+                        </tr>
+                        <tr>
+                            <td>ด้านขวา (Right)</td>
+                            <td>20 × 28 × 1</td>
+                            <td>1</td>
+                            <td>มีช่องต่อแบบเจาะรูบน-ล่าง, มุมโค้ง R1 ซม.</td>
+                        </tr>
+                        <tr>
+                            <td>ด้านหลัง (Back)</td>
+                            <td>38 × 28 × 1</td>
+                            <td>1</td>
+                            <td>มีช่องต่อแบบเจาะรูซ้าย-ขวา, มุมโค้ง R1 ซม.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- แปลนรายละเอียด Tab & Slot -->
+            <div class="section">
+                <h2>🔧 รายละเอียดระบบหัวต่อ-ช่องต่อ</h2>
+                
+                <h3>ขนาดของหัวต่อและช่องต่อ</h3>
+                <div class="dimensions">
+                    <div class="dim-box">
+                        <strong>หัวต่อ</strong><br>
+                        กว้าง: 1 ซม.<br>
+                        ยาว: 2 ซม.
+                    </div>
+                    <div class="dim-box">
+                        <strong>ช่องต่อ</strong><br>
+                        กว้าง: 1 ซม.<br>
+                        ยาว: 2 ซม.<br>
+                        ลึก: 1 ซม.
+                    </div>
+                    <div class="dim-box">
+                        <strong>ระยะห่าง</strong><br>
+                        หัวต่อถัดไป: 6 ซม.<br>
+                        จากขอบ: 1 ซม.<br>
+                        ความแข็งแรง: สูง
+                    </div>
+                </div>
+                
+                <div class="assembly-notes">
+                    <h4>🔍 หลักการระบบหัวต่อ-ช่องต่อ</h4>
+                    <ul>
+                        <li><strong>หัวต่อ:</strong> ชิ้นส่วนที่ยื่นออกมาจากขอบแผ่นไม้</li>
+                        <li><strong>ช่องต่อแบบบาก:</strong> ช่องว่างที่ตัดเข้าไปจากขอบแผ่นไม้</li>
+                        <li><strong>ช่องต่อแบบเจาะรู:</strong> ช่องว่างที่เจาะในไม้ไม่ชิดขอบ</li>
+                        <li><strong>การประกอบ:</strong> หัวต่อเข้าไปในช่องต่อแบบพอดี</li>
+                        <li><strong>ข้อดี:</strong> ไม่ต้องใช้กาวหรือสกรู สามารถถอดประกอบได้</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- รายละเอียดแต่ละชิ้น -->
+            <div class="section">
+                <h2>📏 รายละเอียดและภาพประกอบแต่ละชิ้นส่วน</h2>
+                
+                <div class="diagram-container">
+                    <div class="panel-drawing">
+                        <svg class="panel-svg" width="200" height="120" viewBox="0 0 200 120">
+                            <!-- หลังคา (Top Panel) -->
+                            <rect x="20" y="20" width="160" height="80" fill="none" stroke="#333" stroke-width="2" rx="8" ry="8"/>
+                            <!-- หัวต่อด้านหน้า -->
+                            <rect x="60" y="100" width="20" height="10" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <rect x="120" y="100" width="20" height="10" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <!-- หัวต่อด้านซ้าย -->
+                            <rect x="10" y="55" width="10" height="20" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <!-- หัวต่อด้านขวา -->
+                            <rect x="180" y="55" width="10" height="20" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <text x="100" y="15" text-anchor="middle" font-size="12" font-weight="bold">หลังคา (Top)</text>
+                            <text x="100" y="130" text-anchor="middle" font-size="10">40×20×1 ซม.</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="panel-drawing">
+                        <svg class="panel-svg" width="200" height="120" viewBox="0 0 200 120">
+                            <!-- ฐาน (Bottom Panel) -->
+                            <rect x="20" y="20" width="160" height="80" fill="none" stroke="#333" stroke-width="2" rx="8" ry="8"/>
+                            <!-- หัวต่อด้านหน้า -->
+                            <rect x="60" y="100" width="20" height="10" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <rect x="120" y="100" width="20" height="10" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <!-- หัวต่อด้านซ้าย -->
+                            <rect x="10" y="55" width="10" height="20" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <!-- หัวต่อด้านขวา -->
+                            <rect x="180" y="55" width="10" height="20" fill="#ccc" stroke="#333" stroke-width="1"/>
+                            <text x="100" y="15" text-anchor="middle" font-size="12" font-weight="bold">ฐาน (Bottom)</text>
+                            <text x="100" y="130" text-anchor="middle" font-size="10">40×20×1 ซม.</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="diagram-container">
+                    <div class="panel-drawing">
+                        <svg class="panel-svg" width="120" height="150" viewBox="0 0 120 150">
+                            <!-- ด้านซ้าย (Left Panel) -->
+                            <rect x="20" y="20" width="80" height="110" fill="none" stroke="#333" stroke-width="2" rx="8" ry="8"/>
+                            <!-- ช่องต่อแบบเจาะรูด้านบน -->
+                            <rect x="45" y="10" width="20" height="10" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="50" y="15" width="10" height="5" fill="#333"/>
+                            <!-- ช่องต่อแบบเจาะรูด้านล่าง -->
+                            <rect x="45" y="130" width="20" height="10" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="50" y="130" width="10" height="5" fill="#333"/>
+                            <text x="60" y="15" text-anchor="middle" font-size="12" font-weight="bold">ด้านซ้าย</text>
+                            <text x="60" y="160" text-anchor="middle" font-size="10">20×28×1 ซม.</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="panel-drawing">
+                        <svg class="panel-svg" width="120" height="150" viewBox="0 0 120 150">
+                            <!-- ด้านขวา (Right Panel) -->
+                            <rect x="20" y="20" width="80" height="110" fill="none" stroke="#333" stroke-width="2" rx="8" ry="8"/>
+                            <!-- ช่องต่อแบบเจาะรูด้านบน -->
+                            <rect x="45" y="10" width="20" height="10" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="50" y="15" width="10" height="5" fill="#333"/>
+                            <!-- ช่องต่อแบบเจาะรูด้านล่าง -->
+                            <rect x="45" y="130" width="20" height="10" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="50" y="130" width="10" height="5" fill="#333"/>
+                            <text x="60" y="15" text-anchor="middle" font-size="12" font-weight="bold">ด้านขวา</text>
+                            <text x="60" y="160" text-anchor="middle" font-size="10">20×28×1 ซม.</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="panel-drawing">
+                        <svg class="panel-svg" width="190" height="150" viewBox="0 0 190 150">
+                            <!-- ด้านหลัง (Back Panel) -->
+                            <rect x="20" y="20" width="150" height="110" fill="none" stroke="#333" stroke-width="2" rx="8" ry="8"/>
+                            <!-- ช่องต่อแบบเจาะรูด้านซ้าย -->
+                            <rect x="10" y="45" width="10" height="20" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="15" y="50" width="5" height="10" fill="#333"/>
+                            <rect x="10" y="95" width="10" height="20" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="15" y="100" width="5" height="10" fill="#333"/>
+                            <!-- ช่องต่อแบบเจาะรูด้านขวา -->
+                            <rect x="170" y="45" width="10" height="20" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="170" y="50" width="5" height="10" fill="#333"/>
+                            <rect x="170" y="95" width="10" height="20" fill="white" stroke="#333" stroke-width="1"/>
+                            <rect x="170" y="100" width="5" height="10" fill="#333"/>
+                            <text x="95" y="15" text-anchor="middle" font-size="12" font-weight="bold">ด้านหลัง (Back)</text>
+                            <text x="95" y="160" text-anchor="middle" font-size="10">38×28×1 ซม.</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="panel-diagram">
+                    <h3>หมายเหตุภาพประกอบ</h3>
+                    <ul>
+                        <li><strong>สีเทา:</strong> แสดงตำแหน่งหัวต่อ (ส่วนที่ยื่นออก)</li>
+                        <li><strong>สีดำ:</strong> แสดงตำแหน่งช่องต่อ (ช่องว่างที่ตัด/เจาะ)</li>
+                        <li><strong>มุมโค้ง:</strong> รัศมี 1 ซม. ทั้ง 4 มุม</li>
+                        <li><strong>หัวต่อขนาด:</strong> กว้าง 1 ซม. × ยาว 2 ซม.</li>
+                        <li><strong>ช่องต่อขนาด:</strong> กว้าง 1 ซม. × ยาว 2 ซม. × ลึก 1 ซม.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- เครื่องมือที่ต้องใช้ -->
+            <div class="section">
+                <h2>🛠️ เครื่องมือและอุปกรณ์</h2>
+                
+                <div class="tools-list">
+                    <div class="tool-item">
+                        <strong>🪚 เลื่อยตัดไม้</strong><br>
+                        สำหรับตัดขนาดหลัก
+                    </div>
+                    <div class="tool-item">
+                        <strong>🗜️ เลื่อยจิ๊กซอ</strong><br>
+                        ตัดหัวต่อ, ช่องต่อ และมุมโค้ง
+                    </div>
+                    <div class="tool-item">
+                        <strong>📐 ไม้บรรทัด</strong><br>
+                        วัดและเขียนแบบ
+                    </div>
+                    <div class="tool-item">
+                        <strong>✏️ ดินสอ</strong><br>
+                        เขียนเครื่องหมาย
+                    </div>
+                    <div class="tool-item">
+                        <strong>📏 ตลับเมตร</strong><br>
+                        วัดขนาดแม่นยำ
+                    </div>
+                    <div class="tool-item">
+                        <strong>🗂️ แฟ้ม/กระดาษทราย</strong><br>
+                        เรียบผิวขอบ
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ขั้นตอนการประกอบ -->
+            <div class="section">
+                <h2>🔨 ขั้นตอนการประกอบ</h2>
+                
+                <div class="assembly-notes">
+                    <h4>ลำดับการประกอบ</h4>
+                    <ol>
+                        <li><strong>เตรียมชิ้นส่วน:</strong> ตรวจสอบขนาดและรอยตัดทั้งหมด</li>
+                        <li><strong>ทดสอบการเข้า:</strong> ลองหัวต่อเข้าช่องต่อดูก่อน (ต้องพอดี ไม่หลวม ไม่แน่นเกิน)</li>
+                        <li><strong>ประกอบด้านหลัง:</strong> ใส่แผ่นหลังก่อน</li>
+                        <li><strong>ใส่ด้านข้าง:</strong> ใส่แผ่นซ้าย-ขวา เข้ากับแผ่นหลัง</li>
+                        <li><strong>ใส่ฐาน:</strong> ใส่แผ่นฐานเข้ากับด้านข้าง</li>
+                        <li><strong>ปิดหลังคา:</strong> ใส่แผ่นหลังคาสุดท้าย</li>
+                        <li><strong>ตรวจสอบ:</strong> เช็คความแข็งแรงและรอยต่อทั้งหมด</li>
+                    </ol>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚠️ ข้อควรระวัง</h4>
+                    <ul>
+                        <li>หัวต่อ-ช่องต่อต้องพอดี ไม่หลวมหรือแน่นเกินไป</li>
+                        <li>ตรวจสอบทิศทางการประกอบให้ถูกต้อง</li>
+                        <li>อย่าใช้แรงเกินไปเวลาใส่หัวต่อเข้าช่องต่อ</li>
+                        <li>หากแน่นเกินไป ให้ใช้กระดาษทรายขัดเบาๆ</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- การบำรุงรักษา -->
+            <div class="section">
+                <h2>🧽 การบำรุงรักษา</h2>
+                
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <h4>การทำความสะอาด</h4>
+                        <p>ใช้ผ้าชุบน้ำบิดหมาดเช็ด<br>
+                        ไม่ควรแช่น้ำหรือใช้น้ำล้างโดยตรง<br>
+                        หลีกเลี่ยงสารเคมีที่แรง</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4>การเก็บรักษา</h4>
+                        <p>เก็บในที่แห้ง ไม่ชื้น<br>
+                        หลีกเลี่ยงแสงแดดโดยตรง<br>
+                        สามารถถอดเก็บได้เมื่อไม่ใช้</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4>การซ่อมแซม</h4>
+                        <p>หากหัวต่อหัก: ตัดใหม่หรือเสริมไม้<br>
+                        หากช่องต่อหลวม: ใช้กาวไม้เสริม<br>
+                        รอยขีดข่วน: ใช้กระดาษทรายขัดเบาๆ</p>
+                    </div>
+                    
+                    <div class="spec-card">
+                        <h4>อายุการใช้งาน</h4>
+                        <p>ประมาณ 5-10 ปี<br>
+                        ขึ้นกับการใช้งานและการดูแล<br>
+                        ชิ้นส่วนแทนสามารถทำได้</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
