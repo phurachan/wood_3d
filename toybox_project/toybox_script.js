@@ -403,6 +403,7 @@ function createBackPanel() {
 function setupControls() {
     // สร้าง toolbar container
     const toolbar = document.createElement('div');
+    toolbar.id = 'controls'; // เพิ่ม ID สำหรับ mobile responsive
     toolbar.style.position = 'absolute';
     toolbar.style.top = '20px';
     toolbar.style.left = '20px';
@@ -628,7 +629,7 @@ function assembleView() {
         panel.position.set(original.x, original.y, original.z);
     });
     isExploded = false;
-    document.querySelector('button').innerHTML = 'Explode';
+    // document.querySelector('button').innerHTML = 'แยกชิ้นส่วน';
 }
 
 function animate() {

@@ -224,6 +224,108 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .controls button {
+                padding: 12px 20px;
+                font-size: 14px;
+                margin: 5px;
+            }
+            
+            .panel-section {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+            
+            .panel-content {
+                grid-template-columns: 1fr !important;
+                gap: 20px;
+            }
+            
+            .panel-diagram,
+            .panel-details {
+                padding: 15px;
+            }
+            
+            .detail-label {
+                min-width: 100px;
+                font-size: 0.95em;
+            }
+            
+            #backToIndex {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .controls button {
+                padding: 10px 15px;
+                font-size: 13px;
+                margin: 3px;
+                width: calc(50% - 6px);
+                display: inline-block;
+            }
+            
+            .panel-section {
+                padding: 15px;
+            }
+            
+            .panel-diagram,
+            .panel-details {
+                padding: 12px;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .detail-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+            
+            .svg-container {
+                padding: 10px;
+                min-height: 250px;
+            }
+            
+            #backToIndex {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>

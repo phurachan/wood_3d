@@ -117,13 +117,244 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
             border-color: #DEB887;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            #controls {
+                top: auto !important;
+                bottom: 20px !important;
+                left: 20px !important;
+                right: 20px !important;
+                width: auto !important;
+                padding: 15px !important;
+                min-width: auto !important;
+                max-width: none !important;
+                position: fixed !important;
+                max-height: 25vh !important;
+                overflow-y: auto !important;
+                background: rgba(0, 0, 0, 0.9) !important;
+                backdrop-filter: blur(10px) !important;
+            }
+            
+            #controls h3 {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            .description {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+            
+            button {
+                padding: 8px 12px;
+                margin: 4px 2px;
+                font-size: 11px;
+                width: calc(50% - 4px);
+                display: inline-block;
+            }
+            
+            .color-legend {
+                font-size: 11px;
+            }
+            
+            .color-box {
+                width: 15px;
+                height: 15px;
+                margin-right: 8px;
+            }
+            
+            #backToIndex {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #controls {
+                bottom: 15px;
+                left: 15px;
+                right: 15px;
+                padding: 12px;
+                max-height: 20vh;
+                background: rgba(0, 0, 0, 0.85);
+                backdrop-filter: blur(15px);
+            }
+            
+            #controls h3 {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            
+            .description {
+                font-size: 12px;
+                margin-bottom: 12px;
+            }
+            
+            button {
+                padding: 6px 10px;
+                font-size: 10px;
+                margin: 2px 1px;
+                width: calc(50% - 2px);
+            }
+            
+            .color-legend {
+                font-size: 10px;
+                margin-top: 15px;
+            }
+            
+            .legend-item {
+                margin: 4px 0;
+            }
+            
+            .color-box {
+                width: 12px;
+                height: 12px;
+                margin-right: 6px;
+            }
+            
+            #backToIndex {
+                top: 5px;
+                right: 5px;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
+
+        /* Collapsible Controls for mobile */
+        @media (max-width: 768px) {
+            #controls {
+                transform: translateY(calc(100% - 40px)) !important;
+                transition: transform 0.3s ease !important;
+            }
+            
+            #controls.expanded {
+                transform: translateY(0) !important;
+            }
+            
+            /* Hide control content when collapsed, only show title */
+            #controls:not(.expanded) > *:not(h3) {
+                display: none !important;
+            }
+            
+            #controls:not(.expanded) h3 {
+                margin: 0 !important;
+                font-size: 16px !important;
+                text-align: center !important;
+                border: none !important;
+                padding: 0 !important;
+            }
+        }
+
+        /* Mobile Toggle Button */
+        #toggleControls {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(139, 69, 19, 0.9);
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #toggleControls:hover {
+            background: rgba(160, 82, 45, 0.9);
+            transform: scale(1.05);
+        }
+
+        #toggleControls.active {
+            background: rgba(220, 20, 60, 0.9);
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            #toggleControls {
+                display: flex !important;
+            }
+        }
     </style>
 </head>
 <body>
     <a href="../index.html" id="backToIndex">🏠 กลับหน้าหลัก</a>
+    
+    <!-- Mobile Toggle Button -->
+    <button id="toggleControls" class="mobile-only">⚙️</button>
+    
     <div id="container">
     </div>
 
+    <script>
+        // Mobile controls toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing mobile controls...');
+            
+            // Wait a bit more for all elements to be ready
+            setTimeout(function() {
+                const controls = document.getElementById('controls');
+                const toggleButton = document.getElementById('toggleControls');
+                
+                console.log('Controls element:', controls);
+                console.log('Toggle button:', toggleButton);
+                console.log('Window width:', window.innerWidth);
+                
+                if (window.innerWidth <= 768 && toggleButton && controls) {
+                    let isExpanded = false;
+                    
+                    // Toggle button click handler
+                    toggleButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        isExpanded = !isExpanded;
+                        
+                        console.log('Toggle clicked, isExpanded:', isExpanded);
+                        
+                        if (isExpanded) {
+                            controls.classList.add('expanded');
+                            toggleButton.classList.add('active');
+                            toggleButton.innerHTML = '✕';
+                        } else {
+                            controls.classList.remove('expanded');
+                            toggleButton.classList.remove('active');
+                            toggleButton.innerHTML = '⚙️';
+                        }
+                    });
+                    
+                    // Close when clicking outside (on the 3D model area)
+                    document.addEventListener('click', function(e) {
+                        if (!controls.contains(e.target) && e.target !== toggleButton && isExpanded) {
+                            isExpanded = false;
+                            controls.classList.remove('expanded');
+                            toggleButton.classList.remove('active');
+                            toggleButton.innerHTML = '⚙️';
+                        }
+                    });
+                    
+                    // Prevent closing when clicking inside controls
+                    controls.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                    });
+                    
+                    console.log('Mobile controls initialized successfully!');
+                } else {
+                    console.log('Mobile controls not initialized - missing elements or not mobile view');
+                }
+            }, 1000); // Wait 1 second for Three.js to create controls element
+        });
+    </script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="toybox_script.js"></script>
