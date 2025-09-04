@@ -86,3 +86,51 @@ User typically works on:
 - Prefer Edit tool over Write for existing files
 - Use sed for bulk find/replace of units or terminology
 - Be careful with similar content across panels - provide unique context for edits
+
+## Three.js Shape Creation with quadraticCurveTo (CRITICAL LESSONS)
+
+### Creating Perfect Semi-Circles
+**Key Principle**: ALWAYS fix start/end points first, then adjust angles only
+
+#### Successful Semi-Circle Formula:
+```javascript
+// Fixed requirements (NEVER change these):
+// - Start: (2, -1.5) 
+// - End: (2, 1.5)
+// - Center: (2, 0) for chair legs, (0.5, 0) for slots
+// - Radius: 1.5 units (15cm)
+
+// Working angle formula: -90° to -270°
+for (let i = 0; i < 4; i++) {
+    const angle1 = (-Math.PI/2) - (i * Math.PI) / 4; // -π/2 to -3π/2
+    const angle2 = (-Math.PI/2) - ((i + 1) * Math.PI) / 4;
+    
+    const x2 = centerX + Math.cos(angle2) * radius;
+    const y2 = 0 + Math.sin(angle2) * radius;
+    
+    const midAngle = (angle1 + angle2) / 2;
+    const xControl = centerX + Math.cos(midAngle) * radius * 1.08;
+    const yControl = 0 + Math.sin(midAngle) * radius * 1.08;
+    
+    shape.quadraticCurveTo(xControl, yControl, x2, y2);
+}
+```
+
+#### Critical Rules:
+1. **Never change start/end coordinates** - only adjust angles
+2. **Test semi-circles separately** before applying to complex shapes
+3. **Use consistent naming**: `centerX = 2` for chair, `centerX = 0.5` for slots
+4. **Control point distance**: multiply by 1.08 for smooth curves
+5. **Direction matters**: negative angles (-90° to -270°) for left-curving semicircles
+
+### Chair Project Structure
+- `chair_project/panel_all.html` - Main 3D viewer for chair components
+- `chair_project/panel_all_script.js` - Contains shape creation functions
+- Key functions: `createLeftLeg()`, `createRightLeg()`, `createSeatWithCurves()`
+- Grid layout: 2x2 positioning for different chair components
+
+### Mobile Responsiveness Implementation
+- Added collapsible control panels for mobile devices
+- Uses media queries @768px and @480px breakpoints  
+- Toggle button functionality with backdrop-filter effects
+- Responsive grid layouts and font sizing

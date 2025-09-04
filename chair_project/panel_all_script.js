@@ -35,10 +35,111 @@ function createAllChairPiecesGrid() {
     ];
     
     // สร้างชิ้นส่วนทั้ง 4 ชิ้น
-    createOriginalPanel(gridPositions[0]);
-    createSeat(gridPositions[1]);
+    createHalfCirclePanel(gridPositions[0]);
+    createCircularPanel(gridPositions[1]);
     createLeftLeg(gridPositions[2]);
-    createRightLeg(gridPositions[3]);
+    // createRightLeg(gridPositions[3]);
+}
+
+// แผ่นไม้ครึ่งวงกลมซ้าย - เพื่อทดสอบ
+function createHalfCirclePanel(position) {
+    const panelShape = new THREE.Shape();
+    const radius = 1.5; // รัศมี 15 ซม. = 1.5 units
+    
+    // เริ่มที่ (2, -1.5) - ยึดจุดนี้คงที่
+    const centerX = 2; // ศูนย์กลางวงกลมที่ (2, 0)
+    panelShape.moveTo(2, -radius); // (2, -1.5) - จุดคงที่
+    
+    // ทดสอบองศาใหม่: -90° ถึง -270° 
+    const segmentsPerHalf = 4;
+    
+    for (let i = 0; i < segmentsPerHalf; i++) {
+        // วาดจาก -90° ถึง -270° 
+        const angle1 = (-Math.PI/2) - (i * Math.PI) / segmentsPerHalf; // -π/2 ถึง -3π/2
+        const angle2 = (-Math.PI/2) - ((i + 1) * Math.PI) / segmentsPerHalf;
+        
+        // จุดปลาย (ใช้ศูนย์กลาง (0.5, 0))
+        const x2 = centerX + Math.cos(angle2) * radius;
+        const y2 = 0 + Math.sin(angle2) * radius;
+        
+        // คำนวณจุดควบคุมให้อยู่กึ่งกลางระหว่างจุดเริ่มและจุดจบ
+        const midAngle = (angle1 + angle2) / 2;
+        const xControl = centerX + Math.cos(midAngle) * radius * 1.08;
+        const yControl = 0 + Math.sin(midAngle) * radius * 1.08;
+        
+        panelShape.quadraticCurveTo(xControl, yControl, x2, y2);
+    }
+    
+    // ปิดรูปด้วยเส้นตรงกลับไปจุดเริ่มต้น
+    // panelShape.lineTo(2, -radius);
+    
+    const geometry = new THREE.ExtrudeGeometry(panelShape, {
+        depth: 0.1,
+        bevelEnabled: false
+    });
+    
+    const material = new THREE.MeshBasicMaterial({ color: 0xFF6B6B });
+    const panel = new THREE.Mesh(geometry, material);
+    
+    panel.position.set(position.x, position.y, 0);
+    scene.add(panel);
+}
+
+// แผ่นไม้ทรงกลม - ใช้ lineTo และ quadraticCurveTo เท่านั้น
+function createCircularPanel(position) {
+    const panelShape = new THREE.Shape();
+    const radius = 1.5; // รัศมี 15 ซม. = 1.5 units
+    
+    // เริ่มที่จุดขวาสุด (2, 0)
+    panelShape.moveTo(radius, 0);
+    
+    // วาดวงกลมด้วย 2 ลูป แต่ละลูปทำครึ่งวงกลม
+    const segmentsPerHalf = 4; // แต่ละครึ่งมี 4 ส่วน
+    
+    // ลูปที่ 1: ครึ่งด้านบน (0° ถึง 180°)
+    for (let i = 0; i < segmentsPerHalf; i++) {
+        const angle1 = (i * Math.PI) / segmentsPerHalf; // 0 ถึง π
+        const angle2 = ((i + 1) * Math.PI) / segmentsPerHalf;
+        
+        // จุดปลาย
+        const x2 = Math.cos(angle2) * radius;
+        const y2 = Math.sin(angle2) * radius;
+        
+        // คำนวณจุดควบคุมให้อยู่กึ่งกลางระหว่างจุดเริ่มและจุดจบ
+        const midAngle = (angle1 + angle2) / 2;
+        const xControl = Math.cos(midAngle) * radius * 1.08;
+        const yControl = Math.sin(midAngle) * radius * 1.08;
+        
+        panelShape.quadraticCurveTo(xControl, yControl, x2, y2);
+    }
+    
+    // ลูปที่ 2: ครึ่งด้านล่าง (180° ถึง 360°)
+    for (let i = 0; i < segmentsPerHalf; i++) {
+        const angle1 = Math.PI + (i * Math.PI) / segmentsPerHalf; // π ถึง 2π
+        const angle2 = Math.PI + ((i + 1) * Math.PI) / segmentsPerHalf;
+        
+        // จุดปลาย
+        const x2 = Math.cos(angle2) * radius;
+        const y2 = Math.sin(angle2) * radius;
+        
+        // คำนวณจุดควบคุมให้อยู่กึ่งกลางระหว่างจุดเริ่มและจุดจบ
+        const midAngle = (angle1 + angle2) / 2;
+        const xControl = Math.cos(midAngle) * radius * 1.08;
+        const yControl = Math.sin(midAngle) * radius * 1.08;
+        
+        panelShape.quadraticCurveTo(xControl, yControl, x2, y2);
+    }
+    
+    const geometry = new THREE.ExtrudeGeometry(panelShape, {
+        depth: 0.1,
+        bevelEnabled: false
+    });
+    
+    const material = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
+    const panel = new THREE.Mesh(geometry, material);
+    
+    panel.position.set(position.x, position.y, 0);
+    scene.add(panel);
 }
 
 // แผ่นไม้เริ่มต้น 80×40×1 ซม.
@@ -69,43 +170,42 @@ function createOriginalPanel(position) {
     scene.add(panel);
 }
 
-// ที่นั่งกลม เส้นผ่าศูนย์กลาง 30 ซม.
-function createSeat(position) {
-    const seatShape = new THREE.Shape();
-    const radius = 1.5; // 30cm diameter = 15cm radius = 1.5 units
-    
-    // สร้างวงกลม
-    seatShape.arc(0, 0, radius, 0, Math.PI * 2, false);
-    
-    const geometry = new THREE.ExtrudeGeometry(seatShape, {
-        depth: 0.1,
-        bevelEnabled: false
-    });
-    
-    const material = new THREE.MeshBasicMaterial({ color: 0xA0522D });
-    const seat = new THREE.Mesh(geometry, material);
-    
-    seat.position.set(position.x, position.y, 0);
-    scene.add(seat);
-}
-
-// ขาซ้าย - แผ่น 40×40 บากครึ่งวงกลมด้านขวา
+// ขาซ้าย - แผ่น 40×40 บากครึ่งวงกลมด้านขวา (เว้าเข้าไป)
 function createLeftLeg(position) {
     const legShape = new THREE.Shape();
     const cornerRadius = 0.05;
+    const radius = 1.5; // รัศมีครึ่งวงกลม 15 ซม.
     
     // เริ่มจากมุมซ้ายล่าง
     legShape.moveTo(-2 + cornerRadius, -2);
     legShape.lineTo(2 - cornerRadius, -2);
     legShape.quadraticCurveTo(2, -2, 2, -2 + cornerRadius);
     
-    // วาดไปถึงจุดเริ่มต้นครึ่งวงกลม (ด้านขวา ล่าง)
-    legShape.lineTo(2, -1.5);
+    // วาดขึ้นไปจนถึงจุดเริ่มต้นครึ่งวงกลม
+    legShape.lineTo(2, -radius);
     
-    // วาดครึ่งวงกลมด้านขวา (จากล่างไปบน)
-    legShape.arc(0.5, 0, 1.5, 0, Math.PI, false);
+    // วาดครึ่งวงกลมเว้าเข้าไปทางซ้าย - copy จากการทดสอบที่สำเร็จ
+    const segmentsPerHalf = 4;
+    const centerX = 2; // ศูนย์กลางวงกลมที่ (2, 0)
     
-    // วาดต่อจากจุดสิ้นสุดครึ่งวงกลมไปมุมขวาบน
+    for (let i = 0; i < segmentsPerHalf; i++) {
+        // วาดจาก -90° ถึง -270° 
+        const angle1 = (-Math.PI/2) - (i * Math.PI) / segmentsPerHalf; // -π/2 ถึง -3π/2
+        const angle2 = (-Math.PI/2) - ((i + 1) * Math.PI) / segmentsPerHalf;
+        
+        // จุดปลาย (ใช้ศูนย์กลาง (0.5, 0))
+        const x2 = centerX + Math.cos(angle2) * radius;
+        const y2 = 0 + Math.sin(angle2) * radius;
+        
+        // คำนวณจุดควบคุมให้อยู่กึ่งกลางระหว่างจุดเริ่มและจุดจบ
+        const midAngle = (angle1 + angle2) / 2;
+        const xControl = centerX + Math.cos(midAngle) * radius * 1.08;
+        const yControl = 0 + Math.sin(midAngle) * radius * 1.08;
+        
+        legShape.quadraticCurveTo(xControl, yControl, x2, y2);
+    }
+    
+    // วาดต่อไปยังมุมขวาบน
     legShape.lineTo(2, 2 - cornerRadius);
     legShape.quadraticCurveTo(2, 2, 2 - cornerRadius, 2);
     legShape.lineTo(-2 + cornerRadius, 2);
@@ -125,11 +225,12 @@ function createLeftLeg(position) {
     scene.add(leftLeg);
 }
 
-// ขาขวา - แผ่น 40×40 บากครึ่งวงกลมด้านซ้าย
+// ขาขวา - แผ่น 40×40 บากครึ่งวงกลมด้านซ้าย (เว้าเข้าไป)
 function createRightLeg(position) {
     const legShape = new THREE.Shape();
     const cornerRadius = 0.05;
     
+    // วาดสี่เหลี่ยมที่มีครึ่งวงกลมเว้าเข้าไปด้านซ้าย
     // เริ่มจากมุมซ้ายล่าง
     legShape.moveTo(-2 + cornerRadius, -2);
     legShape.lineTo(2 - cornerRadius, -2);
@@ -139,13 +240,13 @@ function createRightLeg(position) {
     legShape.lineTo(-2 + cornerRadius, 2);
     legShape.quadraticCurveTo(-2, 2, -2, 2 - cornerRadius);
     
-    // วาดไปถึงจุดเริ่มต้นครึ่งวงกลม (ด้านซ้าย บน)
+    // วาดลงไปจนถึงจุดเริ่มต้นของครึ่งวงกลม
     legShape.lineTo(-2, 1.5);
     
-    // วาดครึ่งวงกลมด้านซ้าย (จากบนไปล่าง)
-    legShape.arc(-0.5, 0, 1.5, Math.PI, 0, false);
+    // วาดครึ่งวงกลมเว้าเข้าไป - center อยู่ที่ (-2, 0) absolute position
+    legShape.absarc(-2, 0, 1.5, Math.PI/2, -Math.PI/2, true);
     
-    // วาดต่อจากจุดสิ้นสุดครึ่งวงกลมไปมุมซ้ายล่าง
+    // วาดต่อจากครึ่งวงกลมไปยังมุมซ้ายล่าง
     legShape.lineTo(-2, -2 + cornerRadius);
     legShape.quadraticCurveTo(-2, -2, -2 + cornerRadius, -2);
     
